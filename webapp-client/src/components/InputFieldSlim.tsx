@@ -14,6 +14,7 @@ interface IInputFieldSlim {
     placeholder: string
     onChange: Function
     note?: string
+    value?: string
 }
 
 interface IInputFieldSelectSlim {
@@ -52,6 +53,7 @@ export default function InputFieldSlim(props:IInputFieldSlim) {
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
+        value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
        />
       {props.note && <p className="text-blue-600  text-xs italic">{props.note}</p> }

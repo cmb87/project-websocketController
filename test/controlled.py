@@ -16,13 +16,8 @@ def on_message(ws, message):
 
     try:
         print("Message received")
-        img1 = np.frombuffer(message, np.uint8)
-        img_cv = cv2.imdecode(img1, cv2.IMREAD_ANYCOLOR)
+        print(message)
 
-        cv2.imshow('Frame', img_cv)
-
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
 
     except Exception as e:
         print("ololo schololo")

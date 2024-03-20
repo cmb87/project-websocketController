@@ -3,7 +3,7 @@ import { WebsocketClient } from '../components/WebsocketClient';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 
 import testimg from '../assets/camera.png';
-import {InputFieldSelectSlim}  from '../components/InputFieldSlim';
+import InputFieldSlim, {InputFieldSelectSlim, }  from '../components/InputFieldSlim';
 import { IJoystickStatus, float2int } from '../components/utils';
 import environment from '../environment.json';
 
@@ -29,10 +29,17 @@ const wsVideoStreamer = new WebsocketClient(
 export default function VideoRover() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [status, setStatus] = useState<string>("offline");
+  const [status, setStatus] = useState<{video: string, control: string, stream: string}>({
+    video: wsVideoStreamer.status,
+    control: wsStreamer.status,
+    stream: 'offline'
+  });
   const [robotId, setRobotId] = useState<string>("1");
   const [robotState, setRobotState] = useState<string>("{}");
 
+  const [token, setToken] = useState<string>(wsStreamer.token);
+  const [connectionString, setConnectionString] = useState<string>(wsStreamer.baseUrl);
+  const [toggleReconnect, setToggleReconnect] = useState<boolean>(true);
 
   const [joystickStatus, setJoystickStatus] = useState<IJoystickStatus>({
     x: 0, y:0, type: "stop" ,direction: "IDLE", distance: 0.0
@@ -60,10 +67,23 @@ export default function VideoRover() {
   useEffect(() => {
 
     // Disconnect first
-    setStatus(`offline`)
+    setStatus({
+      video: wsVideoStreamer.status,
+      control: wsStreamer.status,
+      stream: 'offline'
+    })
+
     setRobotState("{}")
     wsStreamer.disconnect();
     wsVideoStreamer.disconnect();
+
+    // Update connection details
+    wsStreamer.token = token;
+    wsStreamer.baseUrl = connectionString;
+
+    wsVideoStreamer.token = token;
+    wsVideoStreamer.baseUrl = connectionString;
+
 
     // if nothing is specified draw the testimage
     drawImage(testimg);
@@ -75,10 +95,6 @@ export default function VideoRover() {
       reader.onload = () => {  
         drawImage(reader.result as string);
       };  
-
-      // Set time stamp
-      const d = new Date();
-      setStatus(`${d.getTime()}`)
 
       try {
         reader.readAsDataURL(msg.data);
@@ -92,9 +108,9 @@ export default function VideoRover() {
     }
 
     // Now start the streams
-    wsVideoStreamer.activateStream(wsUpdateImageCB, robotId);
+    const videoSuccess = wsVideoStreamer.activateStream(wsUpdateImageCB, robotId);
 
-    wsStreamer.activateStream((msg:any)=> {
+    const controlSuccess = wsStreamer.activateStream((msg:any)=> {
       try {
         console.log(msg);
         setRobotState(JSON.stringify(JSON.parse(msg.data))); 
@@ -102,10 +118,21 @@ export default function VideoRover() {
       } catch(err) {}
     }, robotId);
 
-  }, [robotId])
+  }, [robotId, toggleReconnect])
 
   // ----------------------------------
-  useEffect(() => {}, [joystickStatus, wsStreamer.status, wsVideoStreamer.status])
+  useEffect(() => {
+
+  }, [status, joystickStatus])
+
+  useEffect(() => {
+    setStatus({
+      video:  wsVideoStreamer.status,
+      control: wsStreamer.status,
+      stream: `online`
+    })
+  }, [wsStreamer.status, wsVideoStreamer.status])
+
 
   // ----------------------------------
   const publish = (d:IJoystickStatus) => {
@@ -143,8 +170,8 @@ export default function VideoRover() {
         <div className="flex-col p-5 w-full">
 
             <h2 className="my-4 text-xl font-extrabold leading-none tracking-tight text-gray-700 ">Video Stream</h2>
-            { status !== "offline" ? <span className={`bg-green-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status}</span> : 
-            <span className={`bg-red-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status}</span> 
+            { status.stream !== "offline" ? <span className={`bg-green-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status.stream}</span> : 
+            <span className={`bg-red-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status.stream}</span> 
             }
             <canvas width={"100%"} height={"100%"} ref={canvasRef} className='w-full mb-5'></canvas>
 
@@ -203,18 +230,50 @@ export default function VideoRover() {
 
 
               <hr className='mb-5 mt-5'/>
+
               <div className='flex flex-row gap-5'>
                 <pre>
-                  Status Control-Socket: <b>{wsStreamer.status}</b>
+                  Status Control-Socket: <b>{status.video}</b>
                 </pre>
               </div>
 
               <div className='flex flex-row gap-5'>
                 <pre>
-                  Status Video-Socket:   <b>{wsVideoStreamer.status}</b>
+                  Status Video-Socket:   <b>{status.control}</b>
                 </pre>
               </div>
               
+              <hr className='mb-5 mt-5'/>
+
+              <div className='flex flex-row gap-5'>
+                <InputFieldSlim 
+                  id={"1"} 
+                  label={"Connection String"} 
+                  type="text" 
+                  value={connectionString}
+                  placeholder={connectionString} 
+                  onChange={(x:any)=>setConnectionString(x)}
+                />
+
+                <InputFieldSlim 
+                  id={"2"} 
+                  label={"Token"} 
+                  type="text" 
+                  value={token}
+                  placeholder={token} 
+                  onChange={(x:any)=>setToken(x)}
+                />  
+
+              </div>
+
+              <div className='flex flex-row gap-5'>
+                <button 
+                  className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" 
+                  onClick={()=> setToggleReconnect(!toggleReconnect)}
+                >
+                  Update
+                </button>
+              </div>
 
           </div>
 

@@ -8,11 +8,11 @@ export class WebsocketClient {
     private port: number
     private hostname: string
     private ssl: boolean
-    private token: string
+    public token: string
     public ws: WebSocket | null
 
     public status: string = "not initialized"
-
+    public baseUrl: string 
 
     // ---------------------------------------------------
     constructor(hostname: string, port: number, endpoint: string, ssl:boolean=false , token:string='token'){
@@ -24,27 +24,34 @@ export class WebsocketClient {
         this.token = token
 
         this.ws = null
+
+        this.baseUrl = this.getBaseUrl()
     };
 
     // ---------------------------------------------------
     activateStream(callback:any, robotId: string | number) {
         console.log("Connecting to "+this.getServerUrl(robotId));
-        this.status='ok';
+        
         this.ws = new WebSocket(this.getServerUrl(robotId));
 
         this.ws.onopen = (event: Event) => {
-          this.send("hello from React")
-          
+          this.send("hello from React");
+          console.log("socket opened...");
+          this.status='ok';
         };
         this.ws.onmessage = callback;
         this.ws.onerror = (event: Event) => this.status=`error`;
         
     }
-
+    // ---------------------------------------------------
+    getBaseUrl(){
+      if (this.ssl) return `wss://${this.hostname}:${this.port}`
+      return `ws://${this.hostname}:${this.port}`
+    }
     // ---------------------------------------------------
     getServerUrl(robotId: string | number){
-      if (this.ssl) return `wss://${this.hostname}:${this.port}${this.endpoint}?token=${this.token}&robotid=${robotId}&type=${DEVICETYPE}`
-      return `ws://${this.hostname}:${this.port}${this.endpoint}?token=${this.token}&robotid=${robotId}&type=${DEVICETYPE}`
+
+      return `${this.baseUrl}${this.endpoint}?token=${this.token}&robotid=${robotId}&type=${DEVICETYPE}`
     }
 
     // ---------------------------------------------------

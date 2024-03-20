@@ -9,9 +9,11 @@ const querystring = require('querystring');
 
 
 const WEBSOCKETPATH = process.env.WEBSOCKETPATH  || '/control';
-const WEBSOCKETVIDEOPATH = process.env.WEBSOCKETPATH  || '/video';
+const WEBSOCKETVIDEOPATH = process.env.WEBSOCKETVIDEOPATH  || '/video';
 const SECRETTOKEN = process.env.SECRETTOKEN || 'token';
 
+console.log(WEBSOCKETVIDEOPATH)
+console.log(WEBSOCKETPATH)
 
 // =================================
 // Web server
@@ -144,13 +146,14 @@ server.on('upgrade', function upgrade(request, socket, head) {
       wss2.emit('connection', ws, request);
     });
 
-  }
-  
-  else {
+
+  } else {
+    console.log('Destroying soeckt with path:', pathname, WEBSOCKETVIDEOPATH);
     socket.destroy();
+    
   }
 });
 
 server.listen({host:"0.0.0.0", port: 8080 });
-console.log(`Server started on port 8080! Websocket connection on ${WEBSOCKETPATH}`);
+console.log(`Server started on port 8080! Websocket connection on ${WEBSOCKETPATH} and ${WEBSOCKETVIDEOPATH}`);
 

@@ -6,9 +6,17 @@ Websocket based controller for transmitting video and control signals via web ap
 
 ## Get started
 
+Change websocket connection:
+
+    ./webapp-client/src/environment.json (requires a build and place webapp-client/build into webserver/build)
+    docker-compose.yaml
+    Your custom robotic code
+
 Make changes in docker-compose.yaml and spin up the server. Make sure your ports are forwarded (8080) and the reverse proxy allows a connection from outside. Then run
 
     docker-compose up 
+
+
 
 
 ## Control String for Robots:

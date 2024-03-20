@@ -1,0 +1,23 @@
+{
+    "apiKey": "lol",
+    "apiBase": "/",
+    "websocket": {
+        "server": "192.168.128.186",
+        "port": 8080,
+        "ssl": false,
+        "token": "token"
+    },
+    "websocketServer": "192.168.128.186",
+    "uploadAllowedFileTypes": ["JPG", "PNG", "JPEG"],
+    "maxFilesUpload": 100,
+    "api": {
+    },
+    "routes": [
+        {
+            "label": "Home",
+            "path": "/home"
+        }
+
+    ]
+
+}

@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Turning udp messages to websocket",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "Christian Peeren",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "finalhandler": "^1.2.0",
+    "serve-static": "^1.15.0",
+    "ws": "^8.14.2"
+  }
+}

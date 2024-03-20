@@ -1,0 +1,51 @@
+<mxfile host="Electron" modified="2024-03-20T08:09:36.503Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="NvLVw1vHfiPVlFAevq71" version="24.0.4" type="device">
+  <diagram name="Page-1" id="R9sU4cPySPjmnbyTW2KE">
+    <mxGraphModel dx="1434" dy="990" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="653Sj8854av4GssuJXVc-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="653Sj8854av4GssuJXVc-1" target="653Sj8854av4GssuJXVc-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-7" value="/control" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="653Sj8854av4GssuJXVc-6">
+          <mxGeometry x="0.3739" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="653Sj8854av4GssuJXVc-1" target="653Sj8854av4GssuJXVc-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-10" value="/video" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="653Sj8854av4GssuJXVc-9">
+          <mxGeometry x="-0.2143" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-1" value="&lt;b&gt;Websocket&lt;/b&gt;&lt;div&gt;&lt;b&gt;Server&lt;/b&gt;&lt;/div&gt;&lt;div&gt;(nodeJs)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="653Sj8854av4GssuJXVc-2" target="653Sj8854av4GssuJXVc-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-4" value="/video" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="653Sj8854av4GssuJXVc-3">
+          <mxGeometry x="-0.2783" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-2" value="&lt;div&gt;&lt;b&gt;Robot&lt;/b&gt;&lt;/div&gt;type=robot" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="653Sj8854av4GssuJXVc-8" target="653Sj8854av4GssuJXVc-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-12" value="/control" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="653Sj8854av4GssuJXVc-11">
+          <mxGeometry x="0.3143" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="653Sj8854av4GssuJXVc-8" value="&lt;div&gt;&lt;b&gt;WebApp&lt;/b&gt;&lt;/div&gt;type=controller" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="580" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

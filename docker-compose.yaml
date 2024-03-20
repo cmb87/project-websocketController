@@ -1,0 +1,23 @@
+version: "3.8"  # optional since v1.27.0
+
+services:
+
+
+  service-frontend:
+    image: service-control
+    container_name: service-control
+    restart: always
+    build:
+      context: webserver
+      dockerfile: ./docker/Dockerfile
+    environment:
+      WEBSOCKETPATH: /control
+      WEBSOCKETVIDEOPATH: /video
+      SECRETTOKEN: token
+    ports:
+      - "8080:8080"
+
+
+
+networks:
+  default:

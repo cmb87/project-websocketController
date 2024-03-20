@@ -6,7 +6,10 @@ Websocket based controller for transmitting video and control signals via web ap
 
 ## Get started
 
-Make changes in docker-compose.yaml and spin up the server. Make sure your ports are forwarded (8080) and the reverse proxy allows a connection from outside.
+Make changes in docker-compose.yaml and spin up the server. Make sure your ports are forwarded (8080) and the reverse proxy allows a connection from outside. Then run
+
+    docker-compose up 
+
 
 ## Control String for Robots:
 

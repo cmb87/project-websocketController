@@ -4,6 +4,10 @@ Websocket based controller for transmitting video and control signals via web ap
 
 ![architecture](./imgs/connection.drawio.png)
 
+## Get started
+
+Make changes in docker-compose.yaml and spin up the server. Make sure your ports are forwarded (8080) and the reverse proxy allows a connection from outside.
+
 ## Control String for Robots:
 
 For unsecured ws:

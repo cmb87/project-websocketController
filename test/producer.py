@@ -15,7 +15,7 @@ token = "token"
 robotId = 1
 deviceType = "robot"
 
-wsurl = f"ws://localhost:8080/video?token={token}&robotid={robotId}&type={deviceType}"
+wsurl = f"ws://localhost:5000/video?token={token}&robotid={robotId}&type={deviceType}"
 
 
 # websocket.enableTrace(True)

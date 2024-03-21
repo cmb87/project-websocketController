@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef } from 'react'
+import React, {useEffect, useState, useRef, useCallback } from 'react'
 import { WebsocketClient } from '../components/WebsocketClient';
 import { Joystick, JoystickShape } from 'react-joystick-component';
 
@@ -6,6 +6,9 @@ import testimg from '../assets/camera.png';
 import InputFieldSlim, {InputFieldSelectSlim, }  from '../components/InputFieldSlim';
 import { IJoystickStatus, float2int } from '../components/utils';
 import environment from '../environment.json';
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { useKeyPress } from '../components/useKeyPress';
+import { useGamepads } from 'react-gamepads';
 
 
 // Instantiate the socket connections
@@ -29,6 +32,14 @@ const wsVideoStreamer = new WebsocketClient(
 export default function VideoRover() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  //const upPress = useKeyPress("ArrowUp");
+
+  const [gamepads, setGamepads] = useState<any>({});
+  useGamepads(gamepads => setGamepads(gamepads));
+
+  const screen1 = useFullScreenHandle();
+  const screen2 = useFullScreenHandle();
+
   const [status, setStatus] = useState<{video: string, control: string, stream: string}>({
     video: wsVideoStreamer.status,
     control: wsStreamer.status,
@@ -63,6 +74,7 @@ export default function VideoRover() {
     }
   }
 
+  //useEffect(() => {console.log("UpPressed!")},[upPress])
   // ----------------------------------
   useEffect(() => {
 
@@ -133,6 +145,15 @@ export default function VideoRover() {
     })
   }, [wsStreamer.status, wsVideoStreamer.status])
 
+  // ----------------------------------
+  const reportChange = useCallback((state:any, handle:any) => {
+    if (handle === screen1) {
+      console.log('Screen 1 went to', state, handle);
+    }
+    if (handle === screen2) {
+      console.log('Screen 2 went to', state, handle);
+    }
+  }, [screen1, screen2]);
 
   // ----------------------------------
   const publish = (d:IJoystickStatus) => {
@@ -163,7 +184,13 @@ export default function VideoRover() {
   }
 
   return (
+
+
+
     <div className="xl:w-5/6 md:w-full sm:w-full w-full">
+
+
+
 
       <div className="grid md:grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 grid-cols-1">
 
@@ -173,15 +200,33 @@ export default function VideoRover() {
             { status.stream !== "offline" ? <span className={`bg-green-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status.stream}</span> : 
             <span className={`bg-red-900 text-white text-xs font-medium mr-1 px-1.5 py-0.5 my-3 rounded`}>{status.stream}</span> 
             }
-            <canvas width={"100%"} height={"100%"} ref={canvasRef} className='w-full mb-5'></canvas>
+
+          <FullScreen handle={screen1} onChange={reportChange}>
+            <div className="full-screenable-node" style={{background: "white"}}>
+              
+              { screen1.active ? 
+              
+              <button onClick={screen1.exit} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
+                Exit Fullscreen
+              </button> 
+              :
+              <button onClick={screen1.enter} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
+               Enter Fullscreen
+              </button>
+            }
+              <canvas width={"100%"} height={"100%"} ref={canvasRef} className='w-full mb-5'></canvas>
+            </div>
+          </FullScreen>
+
+
+
 
         </div>
-
-
 
         <div className="flex-col p-5 w-full">
 
           {/* Controll */}
+          
           <div className="flex-col">
 
 
@@ -205,6 +250,20 @@ export default function VideoRover() {
             />
 
               <div className='flex flex-row gap-5'>
+
+
+              {/* { gamepads && gamepads.length>0 &&
+              <div>
+              <h2>{gamepads[0].id}</h2>
+              {gamepads[0].buttons &&
+                gamepads[0].buttons.map((button:any, index:any) => (
+                  <div>
+                    {index}: {button.pressed ? 'True' : 'False'}
+                  </div>
+                ))}
+                
+               </div>
+              } */}
 
               <Joystick 
                 size={100}
@@ -303,6 +362,7 @@ export default function VideoRover() {
 
 
     </div>
+
   )
 }
 

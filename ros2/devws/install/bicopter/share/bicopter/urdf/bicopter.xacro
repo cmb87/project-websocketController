@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="bicopter">
+
+  <!-- BGN - Include -->
+  <xacro:include filename="/server_ws/src/bicopter/urdf/robot_parameters.xacro" />
+  <xacro:include filename="/server_ws/src/bicopter/urdf/links_joints.xacro" />
+  <!-- END - Include -->
+  
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+  <material name="props">
+    <color rgba="0 0 0 0.5"/>
+  </material>
+
+
+  <xacro:m_link_box name="${main_body}"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.05"
+    mass="0.5"
+    ixx="0.3" ixy="0" ixz="0"
+    iyy="0.3" iyz="0"
+    izz="0.3"
+    size="0.2 0.06 0.10"
+    material="white"
+  />
+
+  <xacro:m_link_cylinder name="${tail}"
+    origin_rpy="0 1.5708 0" origin_xyz="0 0 0.0"
+    mass="0.02085"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    radius="0.01" length="0.3"
+    material="white"
+  />
+
+  <xacro:m_link_cylinder name="${prop_right}"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+    mass="0.01"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    radius="0.12" length="0.005"
+    material="props"
+  />
+
+  <xacro:m_link_cylinder name="${prop_left}"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+    mass="0.01"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    radius="0.12" length="0.005"
+    material="props"
+  />
+
+  
+  <xacro:m_link_box name="${arm_left}"
+    origin_rpy="0 -0.1 -1.5707" origin_xyz="-0.010 -0.1 0.02"
+    mass="0.05"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    size="0.2 0.02 0.02"
+    material="blue"
+  />
+
+  <xacro:m_link_box name="${arm_right}"
+    origin_rpy="0 -0.1 1.5707" origin_xyz="-0.010 0.1 0.02"
+    mass="0.05"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    size="0.2 0.02 0.02"
+    material="blue"
+  />
+
+  <xacro:m_link_cylinder name="${motor_right}"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+    mass="0.035"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    radius="0.02" length="0.05"
+    material="white"
+  />
+
+  <xacro:m_link_cylinder name="${motor_left}"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+    mass="0.035"
+    ixx="0.00001" ixy="0" ixz="0"
+    iyy="0.00001" iyz="0"
+    izz="0.00001"
+    radius="0.02" length="0.05"
+    material="white"
+  />
+
+  <joint name="link_${main_body}_${tail}" type="fixed">
+    <parent link="${main_body}"/>
+    <child link="${tail}"/>
+    <origin xyz="${-0.2/2-0.3/2} 0.0 0.05"/>
+  </joint>
+
+  <joint name="link_${main_body}_${arm_right}" type="fixed">
+    <parent link="${main_body}"/>
+    <child link="${arm_right}"/>
+    <origin xyz="0 0.0 0.05"/>
+  </joint>
+
+  <joint name="link_${main_body}_${arm_left}" type="fixed">
+    <parent link="${main_body}"/>
+    <child link="${arm_left}"/>
+    <origin xyz="0 0.0 0.05"/>
+  </joint>
+
+  <xacro:m_joint name="${arm_right}__${motor_right}" type="revolute"
+    axis_xyz="0 1 0"
+    origin_rpy="0 0 0" origin_xyz="-0.010 0.2 0.04"
+    parent="${arm_right}" child="${motor_right}"
+    limit_e="1000" limit_l="-0.5" limit_u="0.5" limit_v="0.5"
+  />
+
+  <xacro:m_joint name="${arm_left}__${motor_left}" type="revolute"
+    axis_xyz="0 1 0"
+    origin_rpy="0 0 0" origin_xyz="-0.010 -0.2 0.04"
+    parent="${arm_left}" child="${motor_left}"
+    limit_e="1000" limit_l="-0.5" limit_u="0.5" limit_v="0.5"
+  />
+
+  <xacro:m_axis name="${motor_left}__${prop_left}" 
+    axis_xyz="0 0 -1"
+    origin_rpy="0 0 0" origin_xyz="0.00 -0.0 0.02"
+    parent="${motor_left}" child="${prop_left}"
+  />
+
+  <xacro:m_axis name="${motor_right}__${prop_right}" 
+    axis_xyz="0 0 1"
+    origin_rpy="0 0 0" origin_xyz="0.00  0.0 0.02"
+    parent="${motor_right}" child="${prop_right}"
+  />
+
+
+  <gazebo reference="${main_body}">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  
+  <gazebo reference="${prop_right}">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="${prop_left}">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- This plugin will publish the joint_states for the selected joints 
+          (which robot_state_publisher can then use to broadcast the approprate tf). -->
+
+  <gazebo>
+    <plugin name="gazebo_ros_joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+      <update_rate>20</update_rate>
+      <joint_name>${arm_left}__${motor_left}</joint_name>
+      <joint_name>${arm_right}__${motor_right}</joint_name>
+      <joint_name>${motor_left}__${prop_left}</joint_name>
+      <joint_name>${motor_right}__${prop_right}</joint_name>
+    </plugin>
+  </gazebo>
+
+  <!-- This plugin will read a JointTrajectory message from the /set_joint_trajectory topic 
+          and move the machine accordingly. It's a bit clunky but it works. -->
+  <!-- You'll probably want to add damping to the joints to stop them it flopping around. 
+          e.g. <dynamics damping="10.0" friction="10.0"/> -->
+  <!-- Here's an example message to publish to test it:
+
+          ros2 topic pub -1 /set_joint_trajectory trajectory_msgs/msg/JointTrajectory  '{header: {frame_id: world}, joint_names: [arm_left__motor_left], points: [  {positions: {0.3}} ]}'
+          ros2 topic pub -1 /set_joint_trajectory trajectory_msgs/msg/JointTrajectory  '{header: {frame_id: world}, joint_names: [arm_right__motor_right], points: [  {positions: {0.3}} ]}'
+          -->
+  <gazebo>
+    <plugin name="gazebo_ros_joint_pose_trajectory"
+      filename="libgazebo_ros_joint_pose_trajectory.so">
+      <update_rate>20</update_rate>
+    </plugin>
+  </gazebo>
+
+  <!-- Ros Gazebo force Plugin -->
+  <!-- http://wiki.ros.org/pr2_gazebo_plugins/Tutorials/Attaching%20a%20GazeboRosForce%20pugin%20to%20Objects%20in%20Simulation
+  https://docs.ros.org/en/ros2_packages/rolling/api/gazebo_plugins/generated/classgazebo__plugins_1_1GazeboRosForce.html
+
+  ros2 topic pub -1 /force/prop_left  geometry_msgs/Wrench  '{force:  {x: 0.0, y: 0.0, z: 1000.00}, torque: {x: 0.0,y: 0.0,z: 0.0}}'
+  ros2 topic pub -1 /cmd/prop_left  std_msgs/Float32 '{data: 3.0}'
+  ros2 topic pub -1 /cmd/prop_right  std_msgs/Float32 '{data: 3.0}'
+    -->
+
+
+  <gazebo>
+    <plugin name="gazebo_ros_force" filename="libgazebo_ros_force.so">
+      <ros>
+        <!-- Add a namespace -->
+        <namespace>/force</namespace>
+        <!-- Remap the default topic -->
+        <remapping>gazebo_ros_force:=${prop_right}</remapping>
+      </ros>
+      <force_frame>link</force_frame>
+      <link_name>${motor_right}</link_name>
+    </plugin>
+  </gazebo>
+
+
+  <gazebo>
+    <plugin name="gazebo_ros_force" filename="libgazebo_ros_force.so">
+      <ros>
+        <!-- Add a namespace -->
+        <namespace>/force</namespace>
+        <!-- Remap the default topic -->
+        <remapping>gazebo_ros_force:=${prop_left}</remapping>
+      </ros>
+      <force_frame>link</force_frame>
+      <link_name>${motor_left}</link_name>
+    </plugin>
+  </gazebo>
+
+
+  <gazebo reference="${main_body}">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu</topicName>
+        <bodyName>${main_body}</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>${main_body}</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+
+</robot>
+

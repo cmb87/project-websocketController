@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+
+  ros2:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    restart: always
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: ros2
+    privileged: true
+    network_mode: host
+    command:  >
+          sh -c "echo 'Attaching...' &&
+          tail -f /dev/null"
+    volumes:
+      - ./devws:/server_ws
+      - ./launch.sh:/launch.sh
+      - /dev/shm:/dev/shm
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/input:/dev/input # For Joystick
+    environment:
+    #  - DISPLAY=:1
+      - DISPLAY=192.168.178.120:0.0

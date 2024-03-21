@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:property name="main_body" value="base_link" />
+  <xacro:property name="arm_left" value="arm_left" />
+  <xacro:property name="arm_right" value="arm_right" />
+  <xacro:property name="motor_right" value="motor_right" />
+  <xacro:property name="motor_left" value="motor_left" />
+  <xacro:property name="prop_right" value="prop_right" />
+  <xacro:property name="prop_left" value="prop_left" />
+  <xacro:property name="tail" value="tail" />
+
+</robot>

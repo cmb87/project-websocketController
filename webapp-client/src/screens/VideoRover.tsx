@@ -34,17 +34,18 @@ export default function VideoRover() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   //const upPress = useKeyPress("ArrowUp");
 
-  const [gamepads, setGamepads] = useState<any>({});
-  useGamepads(gamepads => setGamepads(gamepads));
-
   const screen1 = useFullScreenHandle();
   const screen2 = useFullScreenHandle();
 
+  const [gamepad, setGamepad] = useState({x:0,y:0,a:false})
+
+  
   const [status, setStatus] = useState<{video: string, control: string, stream: string}>({
     video: wsVideoStreamer.status,
     control: wsStreamer.status,
     stream: 'offline'
   });
+
   const [robotId, setRobotId] = useState<string>("1");
   const [robotState, setRobotState] = useState<string>("{}");
 
@@ -56,6 +57,30 @@ export default function VideoRover() {
     x: 0, y:0, type: "stop" ,direction: "IDLE", distance: 0.0
   });
   
+
+  // ----------------------------------
+  useEffect(()=>{
+    const interval = setInterval(()=>{
+      const controller = navigator.getGamepads()[0];
+      if (controller) {
+        setGamepad({
+          x: controller.axes[0],
+          y: controller.axes[1],
+          a: controller.buttons[0].pressed
+        })
+
+        // Publish to websocket
+        publish({
+          x: controller.axes[0],
+          y: controller.axes[1],
+          type: "0",
+          direction: "up",
+          distance:0
+        })
+      }
+    }, 100);
+  },[])
+
 
   // ----------------------------------
   const drawImage =  (imageSrc: string) => {
@@ -204,17 +229,21 @@ export default function VideoRover() {
           <FullScreen handle={screen1} onChange={reportChange}>
             <div className="full-screenable-node" style={{background: "white"}}>
               
+              <div className="flex flex-row">
               { screen1.active ? 
-              
-              <button onClick={screen1.exit} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
-                Exit Fullscreen
-              </button> 
-              :
-              <button onClick={screen1.enter} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
-               Enter Fullscreen
-              </button>
-            }
+                <button onClick={screen1.exit} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
+                  Exit Fullscreen
+                </button> 
+                :
+                <button onClick={screen1.enter} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl my-2">
+                Enter Fullscreen
+                </button>
+              }
+              <p className='px-5 py-4'>x:{float2int(gamepad.x*255)} y:{float2int(gamepad.y*255)} a:{gamepad.a ? "true": "false"}</p>
+              </div>
+
               <canvas width={"100%"} height={"100%"} ref={canvasRef} className='w-full mb-5'></canvas>
+
             </div>
           </FullScreen>
 
@@ -252,18 +281,7 @@ export default function VideoRover() {
               <div className='flex flex-row gap-5'>
 
 
-              {/* { gamepads && gamepads.length>0 &&
-              <div>
-              <h2>{gamepads[0].id}</h2>
-              {gamepads[0].buttons &&
-                gamepads[0].buttons.map((button:any, index:any) => (
-                  <div>
-                    {index}: {button.pressed ? 'True' : 'False'}
-                  </div>
-                ))}
-                
-               </div>
-              } */}
+              {/* <p>{gamepad.x} {gamepad.y} {gamepad.a}</p> */}
 
               <Joystick 
                 size={100}
